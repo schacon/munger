@@ -58,13 +58,13 @@ describe Munger::Data do
     @data.data.first['col2'].should eql(2)
   end
   
-  it "should be able to filter a column" do
+  it "should be able to transform a column" do
     @data.data.first[:age].should eql(23)
     @data.transform_column(:age) { |c| c.age * 2 }
     @data.data.first[:age].should eql(46)
   end
   
-  it "should be able to filter multiple rows" do
+  it "should be able to transform multiple rows" do
     @data.data.first[:age].should eql(23)
     @data.data.first[:score].should eql(12)
     @data.transform_columns([:age, :score]) { |c| [c.age * 2, c.score * 3] }

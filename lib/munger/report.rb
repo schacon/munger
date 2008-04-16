@@ -186,6 +186,8 @@ module Munger
           type.call(data)
         else
           case type
+          when :count
+            data.size
           when :average
             sum = data.inject {|sum, n| sum + n }
             (sum / data.size)

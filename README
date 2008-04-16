@@ -1,0 +1,89 @@
+Munger Ruby Reporting Library
+=============================
+
+Munger is basically a simple data munging and reporting library 
+for Ruby as an alternative to Ruport, which did not fill my needs
+in ways that convinced me to start over rather than try to fork or
+patch it.  Apologies to the Ruport chaps, whom I am sure are
+smashing blokes - it just didn't wiggle my worm.
+
+
+3-Part Reporting
+=============================
+
+Munger creates reports in three stages, much like an Apollo rocket. My
+main problem with Ruport was the coupling of different parts of these
+stages in ways that didn't make the data easily re-usable, cacheable or 
+didn't give me enough control.  I likes to have my data separate from my 
+report, which should be renderable however I want.
+
+* Stage 1 - Data Munging *
+
+The first stage is getting a dataset that has all the information you need.
+I like to call this stage 'munging' (pronounced: 'MON'-day + chan-'GING'), 
+which is taking a simple set of data (from a SQL query, perhaps) and 
+transforming fields, adding derived data, pivoting, etc - and making it into
+a table of all the actual data-points you need.
+
+* Stage 2 - Report Formatting *
+
+Then there is the Reporting.  To me, this means taking your massaged dataset 
+and doing all the fun reporting to it.  This includes grouping, subgrouping, 
+sorting, column ordering, multi-level aggregation (sums, avg, etc) and 
+highlighting importanty information (values that are too small, too high, etc).
+
+It can be argued that pivoting should be at this level, rather than the first,
+but I decided to put it there instead, mostly because I really think of the 
+pivoted data as a different data set and also for performance reasons - the 
+pivot data can be a bear to produce, and I plan on caching the first stage and
+then running different reporting options on it.
+
+* Stage 3 - Output Rendering *
+
+Now that I have my super spiffy report, I want to be able to render it however
+I want, possibly in multiple formats - HTML and XLS are the most important to 
+me, but PDF, text, csv, etc will also likely  be produced eventually.
+
+
+Examples
+=============================
+
+The starting data can be ActiveRecord collections or an array of Hashes.
+
+# webpage_hit table has ip_address, hit_date, action, referrer #
+
+* Simple Example *
+
+hits = WebpageHits.find(:all, :conditions => ['hit_date > ?', 1.days.ago])
+@table_data = Munger::Report.new(:data => data)
+@table_data.sort('hit_date').aggregate(:count => :action)
+html_table = Munger::Render::Html.new(@table_data).render
+
+
+* More Complex Example *
+
+hits = WebpageHits.find(:all, :conditions => ['hit_date > ?', 7.days.ago])
+
+data = Munger::Data.new
+data.transform_column('hit_date') { |row| row.hit_date.day }
+data.add_column('controller') { |row| row.action.split('/').first }
+
+day_columns = data.pivot('hit_date', 'action', 'ip_address', :count)
+          
+@table_data = Munger::Report.new(:data => data, 
+                                :columns => [:action] + day_columns,
+                                :aggregate => {:sum => day_columns})
+                                
+@table_data.sort('action').subgroup('controller')
+@table_data.process.style_cells('low_traffic', :only => new_columns) do |cell, row| 
+  # highlight any index pages that have < 500 hits
+  cell.to_i < 500 if row.action =~ /index/  
+end
+      
+html_table = Munger::Render::Html.new(@table_data).render
+
+
+
+
+
+
