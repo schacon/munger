@@ -1,10 +1,6 @@
+require 'munger/render/html'
+
 module Munger
-  
-  class Render
-    
-    def initialize
-    end
-    
+  module Render
   end
-  
 end

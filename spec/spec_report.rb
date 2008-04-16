@@ -120,4 +120,6 @@ describe Munger::Report do
   
   it "should be able to aggregate rows into new column"
   
+  it "should be able to alias column titles"
+  
 end

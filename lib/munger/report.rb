@@ -80,6 +80,10 @@ module Munger
       end
     end
     
+    def rows
+      @process_data.size
+    end
+    
     def valid?
       (@data.is_a? Munger::Data) && (@data.valid?)
     end

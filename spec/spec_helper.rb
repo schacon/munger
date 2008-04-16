@@ -6,6 +6,11 @@ require 'fileutils'
 require 'logger'
 require 'pp'
 
+require 'rspec_hpricot_matchers'
+Spec::Runner.configure do |config|
+  config.include(RspecHpricotMatchers)
+end
+
 module MungerSpecHelper
   def test_data
     [{:name => 'Scott', :age => 23, :day => 1, :score => 12},
