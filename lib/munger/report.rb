@@ -3,7 +3,7 @@ module Munger
   class Report
     
     attr_writer :data, :sort, :columns, :subgroup, :aggregate
-    
+    attr_accessor :column_titles
     attr_reader :process_data, :grouping_level
     
     # r = Munger::Report.new ( :data => data, 
@@ -14,6 +14,7 @@ module Munger
     # report = r.highlight
     def initialize(options = {})
       @grouping_level = 0
+      @column_titles = {}
       set_options(options)
     end
     
@@ -25,10 +26,10 @@ module Munger
           @data = Munger::Data.new(:data => d)
         end
       end
-      @sort = options[:sort] if options[:sort]
-      @columns = options[:columns] if options[:columns]
-      @subgroup = options[:subgroup] if options[:subgroup]
-      @aggregate = options[:aggregate] if options[:aggregate]
+      self.sort(options[:sort]) if options[:sort]
+      self.columns(options[:columns]) if options[:columns]
+      self.subgroup(options[:subgroup]) if options[:subgroup]
+      self.aggregate(options[:aggregate]) if options[:aggregate]
     end
     
     # returns ReportTable
@@ -64,10 +65,23 @@ module Munger
     
     def columns(values = nil)
       if values
-        @columns = values 
+        if values.is_a? Hash
+          @columns = values.keys
+          @column_titles = values
+        else
+          @columns = Data.array(values)
+        end
         self
       else
         @columns ||= @data.columns
+      end
+    end
+
+    def column_title(column)
+      if c = @column_titles[column]
+        return c.to_s
+      else
+        return column.to_s
       end
     end
     

@@ -21,6 +21,12 @@ describe Munger::Render::Html do
     html.should have_tag('tr', :count => count + 1) # rows plus header
   end
   
+  it "should use aliased column titles" do
+    @report = @report.columns({:age => "The Age", :name => "The Name"}).process
+    html = Munger::Render::Html.new(@report).render
+    html.should match(/The Age/)
+  end
+  
   it "should render columns in the right order" do
     @report = @report.columns([:age, :name]).process
     html = Munger::Render::Html.new(@report).render

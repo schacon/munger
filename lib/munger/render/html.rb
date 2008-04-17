@@ -3,10 +3,10 @@ module Munger
   module Render
     class Html
     
-      attr_reader :data
+      attr_reader :report
       
-      def initialize(data)
-        @data = data
+      def initialize(report)
+        @report = report
       end
       
       def render
@@ -14,12 +14,12 @@ module Munger
         x.table do
           
           x.tr do
-            @data.columns.each do |column|
-              x.th { x << column.to_s }
+            @report.columns.each do |column|
+              x.th { x << @report.column_title(column) }
             end
           end
           
-          @data.process_data.each do |row|
+          @report.process_data.each do |row|
             
             classes = []
             classes << row[:meta][:row_styles]
@@ -27,10 +27,10 @@ module Munger
             classes.compact!
             
             row_attrib = {}
-            row_attrib = {:class => classes.join(' ')} if classes
+            row_attrib = {:class => classes.join(' ')} if classes.size > 0
             
             x.tr(row_attrib) do
-              @data.columns.each do |column|
+              @report.columns.each do |column|
                 
                 cell_attrib = {}
                 if cst = row[:meta][:cell_styles]
@@ -49,7 +49,7 @@ module Munger
       end
       
       def valid?
-        @data.is_a? Munger::Report
+        @report.is_a? Munger::Report
       end
     
     end

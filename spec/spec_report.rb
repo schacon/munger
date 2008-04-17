@@ -41,10 +41,18 @@ describe Munger::Report do
     @report.columns([:name, :age, :score])
     @report.columns.should eql([:name, :age, :score])
   end
+
+  it "should be able to alias column titles" do
+    titles = {:name => 'My Name', :age => 'The Age', :score => 'Super Score'}
+    @report.columns(titles)
+    @report.columns.map { |v| v.to_s }.sort.join(',').should eql("age,name,score")
+    @report.column_titles.should eql(titles)
+  end
   
   it "should default to all columns" do
     @report.columns.map { |c| c.to_s }.sort.join(',').should eql('age,day,name,score')
   end
+
 
   it "should be able to subgroup data" do
     @report.sort('name').subgroup('name').process
@@ -120,6 +128,5 @@ describe Munger::Report do
   
   it "should be able to aggregate rows into new column"
   
-  it "should be able to alias column titles"
   
 end
