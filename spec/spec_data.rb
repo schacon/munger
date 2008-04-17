@@ -113,4 +113,8 @@ describe Munger::Data do
   
   it "should be able to group the data like sql"  # like sql group command, give aggregation block
   
+  it "should be able to add two Munger::Datas together if they have the same columns"
+  
+  it "(maybe) should be able to zip two Munger::Datas together given a unique key column in each"
+  
 end

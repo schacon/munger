@@ -61,6 +61,8 @@ describe Munger::Render::Html do
     html = Munger::Render::Html.new(@report).render
     html.should have_tag('td.highlight')
   end
+  
+  it "should render column styles"
 
   it "should render default css if you ask" 
 

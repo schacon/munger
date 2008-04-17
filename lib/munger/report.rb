@@ -200,6 +200,7 @@ module Munger
       end
       
       def calculate_aggregate(type, data)
+        return 0 if !data
         if type.is_a? Proc
           type.call(data)
         else
@@ -207,12 +208,12 @@ module Munger
           when :count
             data.size
           when :average
-            sum = data.inject {|sum, n| sum + n.to_i }
-            (sum / data.size)
+            sum = data.inject(0) {|sum, n| sum + n.to_i }
+            (sum / data.size).to_i rescue 0
           when :product
-            data.inject {|prod, n| prod * n.to_i }
+            data.inject(0) {|prod, n| prod * n.to_i }
           else
-            data.inject {|sum, n| sum + n.to_i }
+            data.inject(0) {|sum, n| sum + n.to_i }
           end
         end
       end
@@ -236,14 +237,14 @@ module Munger
                 new_data << group_row
               end
               current[group] = next_row[:data][group]
-              level =- 1
+              level -= 1
             end 
           else  # last row
             level = @grouping_level
             sub.reverse.each do |group|
-              group_row = {:data => {}, :meta => {:group => 1}}
+              group_row = {:data => {}, :meta => {:group => level}}
               new_data << group_row
-              level =- 1
+              level -= 1
             end
           end
         end

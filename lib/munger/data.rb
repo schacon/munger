@@ -16,7 +16,7 @@ module Munger
     end
 
     def columns
-      @columns ||= @data.first.keys
+      @columns ||= clean_data(@data.first).to_hash.keys
     end
     
     # :default:	The default value to use for the column in existing rows. 

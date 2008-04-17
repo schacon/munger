@@ -58,6 +58,8 @@ describe Munger::Report do
     @report.get_subgroup_rows.should have(6).items
   end
 
+  it "should be able to add subgroup headers"
+
   it "should be able to subgroup in multiple dimensions"
 
   it "should be able to aggregate columns into subgroup rows" do
@@ -124,6 +126,8 @@ describe Munger::Report do
     janet[:cell_styles].should have(1).item
     janet[:cell_styles][:age].should eql(["highlight"])
   end
+  
+  it "should be able to style columns"
   
   it "should be able to attach formatting independent of content"
   # so can format numbers without hurting ability to aggregate correctly
