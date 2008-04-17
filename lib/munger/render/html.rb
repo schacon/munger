@@ -21,15 +21,17 @@ module Munger
           
           @data.process_data.each do |row|
             
+            classes = []
+            classes << row[:meta][:row_styles]
+            classes << 'group' + row[:meta][:group].to_s if row[:meta][:group]
+            classes.compact!
+            
             row_attrib = {}
-            if rst = row[:meta][:row_styles]
-              row_attrib = {:class => rst.join(' ')}
-            end
+            row_attrib = {:class => classes.join(' ')} if classes
             
             x.tr(row_attrib) do
               @data.columns.each do |column|
                 
-                # {:meta=>{:cell_styles=>{:age=>["highlight"]}}
                 cell_attrib = {}
                 if cst = row[:meta][:cell_styles]
                   cst = Item.ensure(cst)

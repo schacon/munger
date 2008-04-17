@@ -32,6 +32,8 @@ describe Munger::Render::Html do
     @report = @report.subgroup(:age).aggregate(:sum => :score).process
     html = Munger::Render::Html.new(@report).render
     html.should match(/151/) # only in the aggregate group
+    html.should have_tag('tr.group0', :count => 1) 
+    html.should have_tag('tr.group1', :count => 8) 
   end
   
   it "should render cell styles" do
@@ -47,5 +49,6 @@ describe Munger::Render::Html do
     html.should have_tag('td.highlight')
   end
 
+  it "should render default css if you ask" 
 
 end
