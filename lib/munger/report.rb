@@ -210,8 +210,6 @@ module Munger
           when :average
             sum = data.inject(0) {|sum, n| sum + n.to_i }
             (sum / data.size).to_i rescue 0
-          when :product
-            data.inject(0) {|prod, n| prod * n.to_i }
           else
             data.inject(0) {|sum, n| sum + n.to_i }
           end

@@ -81,12 +81,9 @@ describe Munger::Report do
     data[:age].should eql(29)
   end
 
-  it "should be able to aggregate with :average, :product" do
+  it "should be able to aggregate with :average" do
     @report.sort('name').subgroup('name').aggregate(:average => :score).process
     @report.get_subgroup_rows(0).first[:data][:score].should eql(15)
-    
-    @report.sort('name').subgroup('name').aggregate(:product => :score).process
-    @report.get_subgroup_rows(0).first[:data][:score].should eql(54428516352)
   end
   
   it "should be able to aggregate with :custom" do
