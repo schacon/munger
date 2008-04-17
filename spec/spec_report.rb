@@ -124,6 +124,12 @@ describe Munger::Report do
     janet[:cell_styles][:age].should eql(["highlight"])
   end
   
+  it "should know when it is processed" do
+    @report.should_not be_processed
+    @report.process
+    @report.should be_processed
+  end
+
   it "should be able to style columns"
   
   it "should be able to attach formatting independent of content"

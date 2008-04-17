@@ -4,9 +4,11 @@ $:.unshift(File.dirname(__FILE__)) unless
 require 'munger/data'
 require 'munger/report'
 require 'munger/item'
+
 require 'munger/render'
 require 'munger/render/html'
+require 'munger/render/text'
 
 module Munger
-  VERSION = '0.1.1'
+  VERSION = '0.1.3'
 end

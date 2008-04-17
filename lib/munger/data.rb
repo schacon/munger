@@ -7,16 +7,20 @@ module Munger
     
     attr_accessor :data
     
-    # will accept active record
-    # can take the options:
-    #  :cache_id
+    # will accept active record collection or array of hashes
     def initialize(options = {})
       @data = options[:data] if options[:data]
       yield self if block_given?
     end
 
+    def self.load_data(data, options = {})
+      Data.new(:data => data)
+    end
+    
     def columns
       @columns ||= clean_data(@data.first).to_hash.keys
+    rescue
+      puts clean_data(@data.first).to_hash.inspect
     end
     
     # :default:	The default value to use for the column in existing rows. 
@@ -51,6 +55,7 @@ module Munger
       elsif hash_or_ar.respond_to? :attributes
         return Item.ensure(hash_or_ar.attributes)
       end
+      hash_or_ar
     end
         
     def filter_rows
@@ -132,8 +137,6 @@ module Munger
       false
     end
     
-    
-  
   end
   
 end

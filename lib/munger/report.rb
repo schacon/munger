@@ -18,6 +18,10 @@ module Munger
       set_options(options)
     end
     
+    def self.from_data(data)
+      Report.new(:data => data)
+    end
+    
     def set_options(options)
       if d = options[:data]
         if d.is_a? Munger::Data
@@ -30,6 +34,14 @@ module Munger
       self.columns(options[:columns]) if options[:columns]
       self.subgroup(options[:subgroup]) if options[:subgroup]
       self.aggregate(options[:aggregate]) if options[:aggregate]
+    end
+    
+    def processed?
+      if @process_data
+        true
+      else
+        false
+      end
     end
     
     # returns ReportTable
@@ -102,8 +114,6 @@ module Munger
       (@data.is_a? Munger::Data) && (@data.valid?)
     end
 
-    # post-processing calls
-
     # @report.style_cells('highlight') { |cell, row| cell > 32 }
     def style_cells(style, options = {})
       @process_data.each_with_index do |row, index|
@@ -136,7 +146,9 @@ module Munger
         end
       end
     end
-    
+
+    # post-processing calls
+
     def get_subgroup_rows(group_level = nil)
       data = @process_data.select { |r| r[:meta][:group] }
       data = data.select { |r| r[:meta][:group] == group_level } if group_level
@@ -148,7 +160,6 @@ module Munger
     end
     
     private 
-
       
       def translate_native(array_of_hashes)
         @process_data = []
