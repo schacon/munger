@@ -44,8 +44,7 @@ describe Munger::Report do
 
   it "should be able to alias column titles" do
     titles = {:name => 'My Name', :age => 'The Age', :score => 'Super Score'}
-    @report.columns(titles)
-    @report.columns.map { |v| v.to_s }.sort.join(',').should eql("age,name,score")
+    @report.column_titles = titles
     @report.column_titles.should eql(titles)
   end
   

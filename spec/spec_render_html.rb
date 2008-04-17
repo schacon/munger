@@ -22,8 +22,9 @@ describe Munger::Render::Html do
   end
   
   it "should use aliased column titles" do
-    @report = @report.columns({:age => "The Age", :name => "The Name"}).process
-    html = Munger::Render::Html.new(@report).render
+    @report = @report.columns([:age, :name, :score])
+    @report.column_titles = {:age => "The Age", :name => "The Name"}
+    html = Munger::Render::Html.new(@report.process).render
     html.should match(/The Age/)
   end
   
