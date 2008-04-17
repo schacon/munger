@@ -21,6 +21,12 @@ describe Munger::Render::Html do
     html.should have_tag('tr', :count => count + 1) # rows plus header
   end
   
+  it "should accept a custom table class" do
+    rep = Munger::Render::Html.new(@report.process, :classes => {:table => 'helloClass'})
+    html = rep.render
+    html.should have_tag('table.helloClass')
+  end
+  
   it "should use aliased column titles" do
     @report = @report.columns([:age, :name, :score])
     @report.column_titles = {:age => "The Age", :name => "The Name"}

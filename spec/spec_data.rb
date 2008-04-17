@@ -72,7 +72,12 @@ describe Munger::Data do
     @data.data.first[:score].should eql(36)
   end
 
-  it "should be able to filter the data down" 
+  it "should be able to filter the data down" do
+    orig_size = @data.size
+    @data.filter_rows { |r| r.age < 30 }
+    @data.size.should < orig_size
+    @data.size.should eql(4)
+  end
   
   it "should be able to pivot the data (1 column)" do
     orig_size = @data.size

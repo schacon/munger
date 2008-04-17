@@ -207,12 +207,12 @@ module Munger
           when :count
             data.size
           when :average
-            sum = data.inject {|sum, n| sum + n }
+            sum = data.inject {|sum, n| sum + n.to_i }
             (sum / data.size)
           when :product
-            data.inject {|prod, n| prod * n }
+            data.inject {|prod, n| prod * n.to_i }
           else
-            data.inject {|sum, n| sum + n }
+            data.inject {|sum, n| sum + n.to_i }
           end
         end
       end

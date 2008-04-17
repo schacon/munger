@@ -47,10 +47,23 @@ module Munger
     
     def clean_data(hash_or_ar)
       if hash_or_ar.is_a? Hash
-        return hash_or_ar
+        return Item.ensure(hash_or_ar)
       elsif hash_or_ar.respond_to? :attributes
-        return hash_or_ar.attributes
+        return Item.ensure(hash_or_ar.attributes)
       end
+    end
+        
+    def filter_rows
+      new_data = []
+      
+      @data.each do |row|
+        row = Item.ensure(row)
+        if (yield row)
+          new_data << row
+        end
+      end
+      
+      @data = new_data
     end
     
     def pivot(columns, rows, value, aggregation = :sum)

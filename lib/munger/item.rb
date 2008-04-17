@@ -42,5 +42,9 @@ module Munger
       end
     end
     
+    def to_hash
+      @data
+    end
+    
   end
 end

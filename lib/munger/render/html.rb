@@ -3,15 +3,23 @@ module Munger
   module Render
     class Html
     
-      attr_reader :report
+      attr_reader :report, :classes
       
-      def initialize(report)
+      def initialize(report, options = {})
         @report = report
+        set_classes(options[:classes])
+      end
+      
+      def set_classes(options = nil)
+        options = {} if !options
+        default = {:table => 'report-table'}
+        @classes = default.merge(options)
       end
       
       def render
         x = Builder::XmlMarkup.new
-        x.table do
+        
+        x.table(:class => @classes[:table]) do
           
           x.tr do
             @report.columns.each do |column|
@@ -24,6 +32,7 @@ module Munger
             classes = []
             classes << row[:meta][:row_styles]
             classes << 'group' + row[:meta][:group].to_s if row[:meta][:group]
+            classes << cycle('even', 'odd')
             classes.compact!
             
             row_attrib = {}
@@ -45,6 +54,14 @@ module Munger
             end
           end
           
+        end
+      end
+      
+      def cycle(one, two)
+        if @current == one
+          @current = two
+        else
+          @current = one
         end
       end
       

@@ -125,6 +125,10 @@ describe Munger::Report do
     janet[:cell_styles][:age].should eql(["highlight"])
   end
   
+  it "should be able to attach formatting independent of content"
+  # so can format numbers without hurting ability to aggregate correctly
+  # or add hyperlinks using data from columns not being shown
+  
   it "should be able to aggregate rows into new column"
   
   
