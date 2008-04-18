@@ -46,14 +46,20 @@ describe Munger::Render::Html do
     html = Munger::Render::Html.new(@report).render
     html.should match(/151/) # only in the aggregate group
     html.should have_tag('tr.group0', :count => 1) 
-    html.should have_tag('tr.group1', :count => 8) 
+    html.should have_tag('tr.group1', :count => 9) 
+  end
+  
+  it "should render group headers" do
+    @report = @report.subgroup(:age, :with_headers => true).process
+    html = Munger::Render::Html.new(@report).render
+    html.should have_tag('tr.groupHeader1', :count => 9) 
   end
   
   it "should render cell styles" do
     @report.process.style_rows('over_thirty') { |row| row.age > 29 }
     
     html = Munger::Render::Html.new(@report).render
-    html.should have_tag('tr.over_thirty')
+    html.should have_tag('tr.over_thirty', :count => 6)
   end
 
   it "should render row styles" do

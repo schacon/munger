@@ -1,0 +1,2 @@
+GET /example | Status: 200 | Params: {:format=>"html"}
+GET /favicon.ico | Status: 404 | Params: {}

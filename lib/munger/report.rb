@@ -2,7 +2,7 @@ module Munger
   
   class Report
     
-    attr_writer :data, :sort, :columns, :subgroup, :aggregate
+    attr_writer :data, :sort, :columns, :subgroup, :subgroup_options, :aggregate
     attr_accessor :column_titles
     attr_reader :process_data, :grouping_level
     
@@ -66,9 +66,10 @@ module Munger
       end
     end
     
-    def subgroup(values = nil)
+    def subgroup(values = nil, options = {})
       if values
         @subgroup = values 
+        @subgroup_options = options
         self
       else
         @subgroup
@@ -164,7 +165,7 @@ module Munger
       def translate_native(array_of_hashes)
         @process_data = []
         array_of_hashes.each do |row|
-          @process_data << {:data => Item.ensure(row), :meta => {}}
+          @process_data << {:data => Item.ensure(row), :meta => {:data => true}}
         end
       end
       
@@ -175,16 +176,7 @@ module Munger
         totals = {}        
         
         @process_data.each_with_index do |row, index|
-          if level = row[:meta][:group]
-            # write the totals and reset level
-            @aggregate.each do |type, columns|
-              Data.array(columns).each do |column|
-                data = totals[column][level]
-                @process_data[index][:data][column] = calculate_aggregate(type, data)
-                totals[column][level] = []
-              end
-            end
-          else
+          if row[:meta][:data]
             @aggregate.each do |type, columns|
               Data.array(columns).each do |column|
                 value = row[:data][column]
@@ -193,6 +185,15 @@ module Munger
                   totals[column][level] ||= []
                   totals[column][level] << value
                 end
+              end
+            end
+          elsif level = row[:meta][:group] 
+            # write the totals and reset level
+            @aggregate.each do |type, columns|
+              Data.array(columns).each do |column|
+                data = totals[column][level]
+                @process_data[index][:data][column] = calculate_aggregate(type, data)
+                totals[column][level] = []
               end
             end
           end
@@ -235,23 +236,59 @@ module Munger
         current = {}
         new_data = []
         
+        first_row = @process_data.first
+        sub.reverse.each do |group|
+          current[group] = first_row[:data][group]
+        end
+        prev_row = {:data => {}}
+        
         @process_data.each_with_index do |row, index|
-          new_data << row
+          # insert header title rows
           next_row = @process_data[index + 1]
+          
           if next_row
             level = @grouping_level
+            
+            # insert header rows
+            sub.each do |group|
+              if (prev_row[:data][group] != current[group]) && current[group]
+                group_row = {:data => {}, :meta => {:group_header => level, 
+                            :group_name => group, :group_value => row[:data][group]}}
+                new_data << group_row
+              end
+            end
+
+            # insert current row
+            new_data << row
+
+            # insert footer rows
             sub.reverse.each do |group|
               if (next_row[:data][group] != current[group]) && current[group]
-                group_row = {:data => {}, :meta => {:group => level}}
+                group_row = {:data => {}, :meta => {:group => level, :group_name => group}}
                 new_data << group_row
               end
               current[group] = next_row[:data][group]
               level -= 1
             end 
+            
+            prev_row = row
+            
           else  # last row
             level = @grouping_level
+            
+            # insert header rows
+            sub.each do |group|
+              if (prev_row[:data][group] != current[group]) && current[group]
+                group_row = {:data => {}, :meta => {:group_header => level, 
+                            :group_name => group, :group_value => row[:data][group]}}
+                new_data << group_row
+              end
+            end
+            
+            new_data << row
+            
             sub.reverse.each do |group|
-              group_row = {:data => {}, :meta => {:group => level}}
+              group_row = {:data => {}, :meta => {:group => level, :group_name => group}}
               new_data << group_row
               level -= 1
             end

@@ -58,8 +58,14 @@ describe Munger::Report do
     @report.get_subgroup_rows.should have(6).items
   end
 
-  it "should be able to add subgroup headers"
+  it "should be able to add subgroup headers" do
+    @report.sort('score').subgroup('score', :with_headers => true)
+    @report.aggregate(:sum => :score).process
+    puts Munger::Render.to_text(@report)
+  end
 
+  it "should add the grouping name on the group line somewhere"
+  
   it "should be able to subgroup in multiple dimensions"
 
   it "should be able to aggregate columns into subgroup rows" do
