@@ -23,7 +23,7 @@ module Munger
           
           x.tr do
             @report.columns.each do |column|
-              x.th { x << @report.column_title(column) }
+              x.th(:class => 'columnTitle') { x << @report.column_title(column) }
             end
           end
           
@@ -45,7 +45,7 @@ module Munger
             x.tr(row_attrib) do
               if row[:meta][:group_header]
                 header = @report.column_title(row[:meta][:group_name]) + ' : ' + row[:meta][:group_value].to_s
-                x.td(:colspan => @report.columns.size) { x << header }
+                x.th(:colspan => @report.columns.size) { x << header }
               else 
                 @report.columns.each do |column|
                 
