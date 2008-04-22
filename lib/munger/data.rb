@@ -71,6 +71,64 @@ module Munger
       @data = new_data
     end
     
+    # group the data like sql
+    def group(groups, agg_hash = {})
+      data_hash = {}
+      
+      agg_columns = []
+      agg_hash.each do |key, columns|
+        Data.array(columns).each do |col|  # column name
+          agg_columns << col
+        end
+      end
+      agg_columns = agg_columns.uniq.compact
+      
+      @data.each do |row|
+        row_key = Data.array(groups).map { |rk| row[rk] }
+        data_hash[row_key] ||= {:cells => {}, :data => {}, :count => 0}
+        focus = data_hash[row_key]
+        focus[:data] = clean_data(row)
+        
+        agg_columns.each do |col|
+          focus[:cells][col] ||= []
+          focus[:cells][col] << row[col]
+        end
+        focus[:count] += 1
+      end
+            
+      new_data = []
+      new_keys = []
+      
+      data_hash.each do |row_key, data|
+        new_row = data[:data]
+        agg_hash.each do |key, columns|
+          Data.array(columns).each do |col|  # column name
+            newcol = ''
+            if key.is_a?(Array) && key[1].is_a?(Proc)
+              newcol = key[0].to_s + '_' + col.to_s
+              new_row[newcol] = key[1].call(data[:cells][col])
+            else  
+              newcol = key.to_s + '_' + col.to_s
+              case key
+              when :average
+                sum = data[:cells][col].inject(0) { |sum, a| sum + a.to_i }
+                new_row[newcol] = (sum / data[:count])  
+              when :count
+                new_row[newcol] = data[:count]  
+              else            
+                new_row[newcol] = data[:cells][col].inject(0) { |sum, a| sum + a.to_i }
+              end
+            end
+            new_keys << newcol
+          end
+        end
+        new_data << Item.ensure(new_row)
+      end
+      
+      @data = new_data
+      new_keys.compact
+    end
+    
     def pivot(columns, rows, value, aggregation = :sum)
       data_hash = {}
       
@@ -82,7 +140,7 @@ module Munger
         focus = data_hash[row_key][column_key]
         focus[:data] = clean_data(row)
         focus[:count] += 1
-        focus[:sum] += row[value]
+        focus[:sum] += row[value].to_i
       end
       
       new_data = []
@@ -126,9 +184,8 @@ module Munger
     
     def valid?
       if ((@data.size > 0) &&
-        (@data.respond_to :each_with_index) &&
-        (@data.first.respond_to :keys)) &&
-        (!@data.first.is_a? String)
+        (@data.respond_to? :each_with_index) &&
+        (@data.first.respond_to? :keys))
         return true
       else
         return false

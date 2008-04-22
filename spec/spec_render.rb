@@ -18,5 +18,11 @@ describe Munger::Render do
     text.should_not have_tag('table')
     text.split("\n").should have_at_least(5).items
   end
+
+  it "should render xls"
+
+  it "should render csv"
+
+  it "should render pdf"
   
 end

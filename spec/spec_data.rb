@@ -107,12 +107,32 @@ describe Munger::Data do
     alice.Alice.should eql(2)
   end
 
+  # like sql group command, give aggregation block
+  it "should be able to group the data like sql" do
+    @data.group(:name)
+    @data.size.should eql(6)
+  end
+  
+  it "should be able to group on multiple columns" do
+    @data.group([:age, :score], :count => :day, :sum => :day, :average => :score)
+    alice = @data.data.select { |r| (r.score == 12) && (r.age == 33)}.first
+    alice.count_day.should eql(2)
+    alice.sum_day.should eql(3)
+    alice.average_day.should eql(nil)
+  end
+
+  it "should be able to group with a proc aggregation" do
+    pr = Proc.new {|arr| arr.inject(0) { |a,b| a + (b*2) }}
+    @data.group([:age, :score], :sum => :day, ['test', pr] => :age)    
+    alice = @data.data.select { |r| (r.score == 12) && (r.age == 33)}.first
+    alice.test_age.should eql(132)
+    alice.sum_day.should eql(3)
+  end
+
   it "should be able to pivot the data in three dimensions (2 col, 1 row)"
   
   it "should be able to pivot the data in four dimensions (2 col, 2 row)"
-  
-  it "should be able to group the data like sql"  # like sql group command, give aggregation block
-  
+    
   it "should be able to add two Munger::Datas together if they have the same columns"
   
   it "(maybe) should be able to zip two Munger::Datas together given a unique key column in each"

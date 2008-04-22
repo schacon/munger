@@ -127,7 +127,11 @@ module Munger
         else
           cols = columns
         end
-        
+
+        if options[:no_groups] && row[:meta][:group]
+          next
+        end
+          
         cols.each do |col|
           if yield(row[:data][col], row[:data])
             @process_data[index][:meta][:cell_styles] ||= {}
@@ -247,21 +251,26 @@ module Munger
           next_row = @process_data[index + 1]
           
           if next_row
-            level = @grouping_level
             
             # insert header rows
-            sub.each do |group|
-              if (prev_row[:data][group] != current[group]) && current[group]
-                group_row = {:data => {}, :meta => {:group_header => level, 
-                            :group_name => group, :group_value => row[:data][group]}}
-                new_data << group_row
+            if @subgroup_options[:with_headers]
+              level = 1
+              sub.each do |group|
+                if (prev_row[:data][group] != current[group]) && current[group]
+                  group_row = {:data => {}, :meta => {:group_header => level, 
+                              :group_name => group, :group_value => row[:data][group]}}
+                  new_data << group_row
+                end
+                level += 1
               end
             end
-
+            
             # insert current row
             new_data << row
 
+
             # insert footer rows
+            level = @grouping_level
             sub.reverse.each do |group|
               if (next_row[:data][group] != current[group]) && current[group]
                 group_row = {:data => {}, :meta => {:group => level, :group_name => group}}

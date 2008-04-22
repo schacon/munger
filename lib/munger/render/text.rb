@@ -34,9 +34,10 @@ module Munger
 
         # body
         @report.process_data.each do |row|
-          output += '|'
+          (row[:meta][:group]) ? sep = ':' : sep = '|'
+          output += sep
           @report.columns.each do |column|
-            output += row[:data][column].to_s.ljust(depth[column] + 1) + '| '
+            output += row[:data][column].to_s.ljust(depth[column] + 1) + sep + ' '
           end
           output += "\n"
         end
