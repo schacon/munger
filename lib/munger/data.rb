@@ -26,6 +26,14 @@ module Munger
       @data
     end
     
+
+    #--
+    # NOTE:
+    # The name seems redundant; why:
+    #   Munger::Data.load_data(data)
+    # and not:
+    #   Munger::Data.load(data)
+    #++
     def self.load_data(data, options = {})
       Data.new(:data => data)
     end
