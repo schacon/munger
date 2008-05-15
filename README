@@ -31,7 +31,7 @@ a table of all the actual data-points you need.
 Then there is the Reporting.  To me, this means taking your massaged dataset 
 and doing all the fun reporting to it.  This includes grouping, subgrouping, 
 sorting, column ordering, multi-level aggregation (sums, avg, etc) and 
-highlighting importanty information (values that are too small, too high, etc).
+highlighting important information (values that are too small, too high, etc).
 
 It can be argued that pivoting should be at this level, rather than the first,
 but I decided to put it there instead, mostly because I really think of the 
