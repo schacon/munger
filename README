@@ -43,7 +43,7 @@ then running different reporting options on it.
 
 Now that I have my super spiffy report, I want to be able to render it however
 I want, possibly in multiple formats - HTML and XLS are the most important to 
-me, but PDF, text, csv, etc will also likely  be produced eventually.
+me, but PDF, text, csv, etc will also likely be produced eventually.
 
 
 Examples
