@@ -15,7 +15,7 @@ See the Wiki for details : http://github.com/schacon/munger/wikis
 Munger creates reports in three stages, much like an Apollo rocket. My
 main problem with Ruport was the coupling of different parts of these
 stages in ways that didn't make the data easily re-usable, cacheable or 
-didn't give me enough control.  I likes to have my data separate from my 
+didn't give me enough control.  I like to have my data separate from my 
 report, which should be renderable however I want.
 
 * Stage 1 - Data Munging *
