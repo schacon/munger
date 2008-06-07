@@ -3,7 +3,11 @@ require 'sinatra'
 require File.expand_path(File.dirname(__FILE__) + "/../lib/munger")
 
 get '/' do
-  report = Munger::Report.from_data(test_data).process
+  data = Munger::Data.load_data(test_data)
+  
+  report = Munger::Report.from_data(data)
+  report.process
+  
   out = Munger::Render.to_html(report, :classes => {:table => 'other-class'} )
   show(out)
 end
@@ -19,7 +23,7 @@ get '/pivot' do
   new_columns = data.pivot('airtime', 'advert', 'rate', :average)
 
   report = Munger::Report.from_data(data)
-  report.columns([:advert] + new_columns)
+  report.columns([:advert] + new_columns.sort)
   report.process
 
   report.style_cells('myRed', :only => new_columns) { |cell, row| (cell.to_i < 10 && cell.to_i > 0) }
