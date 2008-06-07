@@ -1,4 +1,10 @@
-require 'builder'
+begin
+  require 'builder'
+rescue LoadError
+  require 'rubygems'
+  require 'builder'
+end
+
 module Munger
   module Render
     class Html
