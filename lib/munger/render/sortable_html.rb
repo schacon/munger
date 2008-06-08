@@ -7,10 +7,10 @@ module Munger
       attr_reader :report, :classes
       
       # options:
-      # :url => /some/url/for/link # link to put on column
-      # :params => {:url_params} # parameters from url if any
-      # :sort => 'column' # column that is currently sorted
-      # :order => 'asc' || 'desc' # order of the currently sorted field
+      # :url => /some/url/for/link  # link to put on column
+      # :params => {:url_params}    # parameters from url if any
+      # :sort => 'column'           # column that is currently sorted
+      # :order => 'asc' || 'desc'   # order of the currently sorted field
       def initialize(report, options = {})
         @report = report
         @options = options
