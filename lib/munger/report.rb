@@ -15,6 +15,7 @@ module Munger
     def initialize(options = {})
       @grouping_level = 0
       @column_titles = {}
+      @column_data_fields = {}
       set_options(options)
     end
     
