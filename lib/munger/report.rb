@@ -3,7 +3,7 @@ module Munger
   class Report
     
     attr_writer :data, :sort, :columns, :subgroup, :subgroup_options, :aggregate
-    attr_accessor :column_titles, :column_data_fields
+    attr_accessor :column_titles, :column_data_fields, :column_formatters
     attr_reader :process_data, :grouping_level
     
     # r = Munger::Report.new ( :data => data, 
@@ -16,6 +16,7 @@ module Munger
       @grouping_level = 0
       @column_titles = {}
       @column_data_fields = {}
+      @column_formatters = {}
       set_options(options)
     end
     
@@ -101,6 +102,10 @@ module Munger
     
     def column_data_field(column)
       @column_data_fields[column] || column.to_s
+    end
+    
+    def column_formatter(column)
+      @column_formatters[column]
     end
     
     def aggregate(values = nil)

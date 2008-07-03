@@ -12,7 +12,20 @@ module Munger
       @data = options[:data] if options[:data]
       yield self if block_given?
     end
-
+    
+    def <<(data)
+      add_data(data)
+    end
+    
+    def add_data(data)
+      if @data
+        @data = @data + data 
+      else
+        Data.new(:data => data)
+      end
+      @data
+    end
+    
     def self.load_data(data, options = {})
       Data.new(:data => data)
     end
@@ -192,6 +205,16 @@ module Munger
       end
     rescue
       false
+    end
+
+    # cols is an array of column names, if given the nested arrays are built in this order
+    def to_a(cols=nil)
+      array = []
+      cols ||= self.columns
+      @data.each do |row|
+        array << cols.inject([]){ |a,col| a << row[col] }
+      end
+      array
     end
     
   end

@@ -42,9 +42,7 @@ module Munger
                 direction = @options[:order] == 'asc' ? 'desc' : 'asc'
                 direction_class = "sorted-#{direction}"
               end
-              puts @options[:params].inspect
               new_params = @options[:params].merge({'sort' => @report.column_data_field(column),'order' => direction})
-              puts new_params.inspect
               x.th(:class => "columnTitle #{sorted_state} #{direction_class}" ) do 
                  # x << @report.column_title(column) 
                  x << "<a href=\"#{@options[:url]}?#{create_querystring(new_params)}\">#{@report.column_title(column)}</a>"
@@ -81,8 +79,26 @@ module Munger
                       cell_attrib = {:class => cell_styles.join(' ')}
                     end
                   end
-                
-                  x.td(cell_attrib) { x << row[:data][column].to_s }
+                  # TODO: Clean this up, I don't like it but it's working
+                  # output the cell
+                  # x.td(cell_attrib) { x << row[:data][column].to_s }
+                  x.td(cell_attrib) do
+                    formatter,*args = *@report.column_formatter(column)
+                    col_data = row[:data] #[column]
+                    if formatter && col_data[column]
+                      formatted = if formatter.class == Proc
+                        formatter.call(col_data.data)
+                      elsif col_data[column].respond_to? formatter
+                        col_data[column].send(formatter, *args)
+                      elsif
+                        col_data[column].to_s
+                      end
+                    else
+                      formatted = col_data[column].to_s
+                    end
+                    x << formatted.to_s
+                  end
+                 
                 end
               end
             end
@@ -109,7 +125,6 @@ module Munger
         params.each do |k,v|
           qs << "#{k}=#{v}"
         end
-        puts qs
         qs.join("&")
       end
       
