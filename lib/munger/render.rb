@@ -15,5 +15,8 @@ module Munger
       Text::new(report).render
     end
     
+    def self.to_csv(report)
+      CSV::new(report).render
+    end
   end
 end
