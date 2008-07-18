@@ -50,7 +50,7 @@ module Munger
             
             x.tr(row_attrib) do
               if row[:meta][:group_header]
-                header = @report.column_title(row[:meta][:group_name]) + ' : ' + row[:meta][:group_value].to_s
+                header = row[:meta][:group_value].to_s
                 x.th(:colspan => @report.columns.size) { x << header }
               else 
                 @report.columns.each do |column|
