@@ -325,7 +325,7 @@ module Munger
       
           Data.array(@sort).each do |sorting|
             if sorting.is_a? String
-              compare = a[sorting] <=> b[sorting]
+              compare = a[sorting] <=> b[sorting] rescue 0
               break if compare != 0
             elsif sorting.is_a? Array
               key = sorting[0]
