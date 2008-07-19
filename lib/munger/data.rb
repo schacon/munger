@@ -21,7 +21,7 @@ module Munger #:nodoc:
       if @data
         @data = @data + data 
       else
-        Data.new(:data => data)
+        @data = data
       end
       @data
     end
