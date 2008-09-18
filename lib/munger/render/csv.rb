@@ -1,6 +1,6 @@
-module Munger
-  module Render
-    class CSV
+module Munger #:nodoc:
+  module Render #:nodoc:
+    class CSV #:nodoc:
     
       attr_reader :report
       

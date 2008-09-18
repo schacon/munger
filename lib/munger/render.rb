@@ -1,6 +1,6 @@
 # Munger::Render.to_html(report)
   
-module Munger
+module Munger #:nodoc:
   module Render
         
     def self.to_html(report, options = {})

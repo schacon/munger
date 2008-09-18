@@ -1,5 +1,5 @@
-module Munger
-  module Render
+module Munger #:nodoc:
+  module Render #:nodoc:
     class Text
     
       attr_reader :report

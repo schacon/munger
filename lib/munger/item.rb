@@ -1,4 +1,4 @@
-module Munger
+module Munger #:nodoc:
   
   class Item
     

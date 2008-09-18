@@ -1,4 +1,4 @@
-module Munger
+module Munger #:nodoc:
   
   # this class is a data munger
   #  it takes raw data (arrays of hashes, basically) 

@@ -1,6 +1,6 @@
 require 'builder'
-module Munger
-  module Render
+module Munger #:nodoc:
+  module Render #:nodoc:
     # Render a table that lets the user sort the columns
     class SortableHtml
     

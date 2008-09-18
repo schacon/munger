@@ -5,8 +5,8 @@ rescue LoadError
   require 'builder'
 end
 
-module Munger
-  module Render
+module Munger #:nodoc:
+  module Render #:nodoc:
     class Html
     
       attr_reader :report, :classes
