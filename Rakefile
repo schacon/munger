@@ -1,6 +1,7 @@
 require 'rubygems'
 Gem::manage_gems
 require 'rake/gempackagetask'
+require 'spec/rake/spectask'
 
 spec = Gem::Specification.new do |s|
     s.platform  =   Gem::Platform::RUBY
@@ -24,5 +25,20 @@ end
 
 task :default => "pkg/#{spec.name}-#{spec.version}.gem" do
     puts "generated latest version"
+end
+
+desc 'Run specs'
+Spec::Rake::SpecTask.new do |t|
+  t.spec_opts = ['--format', 'specdoc', '--colour', '--diff']
+end
+
+desc 'Generate coverage reports'
+Spec::Rake::SpecTask.new('spec:coverage') do |t|
+  t.rcov = true
+end
+
+desc 'Generate a nice HTML report of spec results'
+Spec::Rake::SpecTask.new('spec:report') do |t|
+  t.spec_opts = ['--format', 'html:report.html', '--diff']
 end
 
