@@ -324,8 +324,8 @@ module Munger #:nodoc:
           b = Item.ensure(b)
       
           Data.array(@sort).each do |sorting|
-            if sorting.is_a? String
-              compare = a[sorting] <=> b[sorting] rescue 0
+            if sorting.is_a?(String) || sorting.is_a?(Symbol)
+              compare = a[sorting.to_s] <=> b[sorting.to_s] rescue 0
               break if compare != 0
             elsif sorting.is_a? Array
               key = sorting[0]
