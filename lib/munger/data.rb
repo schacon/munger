@@ -132,12 +132,12 @@ module Munger #:nodoc:
               newcol = key.to_s + '_' + col.to_s
               case key
               when :average
-                sum = data[:cells][col].inject(0) { |sum, a| sum + a.to_i }
+                sum = data[:cells][col].inject { |sum, a| sum + a }
                 new_row[newcol] = (sum / data[:count])  
               when :count
                 new_row[newcol] = data[:count]  
               else            
-                new_row[newcol] = data[:cells][col].inject(0) { |sum, a| sum + a.to_i }
+                new_row[newcol] = data[:cells][col].inject { |sum, a| sum + a }
               end
             end
             new_keys << newcol
@@ -161,7 +161,7 @@ module Munger #:nodoc:
         focus = data_hash[row_key][column_key]
         focus[:data] = clean_data(row)
         focus[:count] += 1
-        focus[:sum] += row[value].to_i
+        focus[:sum] += row[value]
       end
       
       new_data = []

@@ -234,10 +234,10 @@ module Munger #:nodoc:
           when :count
             data.size
           when :average
-            sum = data.inject(0) {|sum, n| sum + n.to_i }
-            (sum / data.size).to_i rescue 0
+            sum = data.inject {|sum, n| sum + n }
+            (sum / data.size) rescue 0
           else
-            data.inject(0) {|sum, n| sum + n.to_i }
+            data.inject {|sum, n| sum + n }
           end
         end
       end
