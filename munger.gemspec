@@ -24,14 +24,13 @@ Gem::Specification.new do |s|
                "lib/munger/render/sortable_html.rb",
                "lib/munger/render/text.rb",
                "lib/munger/render/csv.rb",
-               "spec/spec_base.rb",
                "spec/spec_helper.rb",
                "spec/munger/data_spec.rb",
                "spec/munger/item_spec.rb",
                "spec/munger/render_spec.rb",
                "spec/munger/report_spec.rb",
-               "spec/data/new_spec.rb",
-               "spec/render/html_spec.rb",
-               "spec/render/text_spec.rb",
-               "spec/render/csv_spec.rb"]
+               "spec/munger/data/new_spec.rb",
+               "spec/munger/render/csv_spec.rb",
+               "spec/munger/render/html_spec.rb",
+               "spec/munger/render/text_spec.rb"]
 end
